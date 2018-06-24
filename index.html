@@ -418,10 +418,14 @@
 					item.switch = !item.switch;
 				},
 				deleteItemFromList: function (item) {
+					let username = (localStorage.username && localStorage.username != 'undefined' && localStorage.username !=
+							'null') ?
+						localStorage.username : this.username;
 					dapp.set({
 						id: item.id,
 						from: this.from,
 						content: this.content,
+						username,
 						switch: false,
 					}).then(r => {
 						let index = this.todo.indexOf(item)

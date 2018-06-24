@@ -163,7 +163,7 @@ var dapp = {
     var gas_price = "1000000"
     var gas_limit = "2000000"
     var callFunction = "forEach";
-    var callArgs = JSON.stringify([dapp.from, '10', '0']);
+    var callArgs = JSON.stringify([dapp.from, '1000', '0']);
     var contract = {
       "function": callFunction,
       "args": callArgs
