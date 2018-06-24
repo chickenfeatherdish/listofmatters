@@ -1,0 +1,460 @@
+﻿<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no" />
+	<title>最简洁的事项清单</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		html,
+		body {
+			background: #f7f1f1;
+			font-size: 1.1rem;
+			font-family: 'Quicksand', sans-serif;
+			height: 100%;
+		}
+
+		::-webkit-scrollbar {
+
+			display: none
+		}
+
+		@keyframes strikeitem {
+			to {
+				width: calc(100% + 1rem);
+			}
+		}
+
+		#todolist {
+			margin: 4rem auto;
+			padding: 2rem 3rem 3rem;
+			max-width: 500px;
+			background: #FF6666;
+			color: #FFF;
+			box-shadow: -20px -20px 0px 0px rgba(100, 100, 100, .1);
+		}
+
+		#todolist h1 {
+			/*text-align:center;*/
+			font-weight: normal;
+			font-size: 2.6rem;
+			letter-spacing: 0.05em;
+			border-bottom: 1px solid rgba(255, 255, 255, .3);
+		}
+
+		#todolist h1 span {
+			display: block;
+			font-size: 0.8rem;
+			margin-bottom: 0.7rem;
+			margin-left: 3px;
+			margin-top: 0.2rem;
+		}
+
+		#todolist .emptylist {
+			margin-top: 2.6rem;
+			text-align: center;
+			letter-spacing: .05em;
+			font-style: italic;
+			opacity: 0.8;
+
+		}
+
+		#todolist ul {
+			margin-top: 2.6rem;
+			list-style: none;
+		}
+
+		#todolist li {
+			display: flex;
+			margin: 0 -3rem 4px;
+			padding: 1.1rem 3rem;
+			justify-content: space-between;
+			align-items: center;
+			background: rgba(255, 255, 255, 0.1);
+		}
+
+		#todolist .actions {
+			flex-shrink: 0;
+			padding-left: 0.7em;
+		}
+
+		#todolist .label {
+			position: relative;
+			transition: opacity .2s linear;
+		}
+
+		#todolist .done .label {
+			opacity: .6;
+		}
+
+		#todolist .done .label:before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: -.5rem;
+			display: block;
+			width: 0%;
+			height: 1px;
+			background: #FFF;
+			animation: strikeitem .3s ease-out 0s forwards;
+		}
+
+		#todolist .btn-picto {
+			border: none;
+			background: none;
+			-webkit-appearance: none;
+			cursor: pointer;
+			color: #FFF;
+		}
+
+
+		/* FORM */
+
+		form {
+			margin-top: 3rem;
+			display: flex;
+			flex-wrap: wrap;
+		}
+
+		form label {
+			min-width: 100%;
+			margin-bottom: .5rem;
+			font-size: 1.3rem;
+		}
+
+		form input {
+			flex-grow: 1;
+			border: none;
+			background: #f7f1f1;
+			padding: 0 1.5em;
+			font-size: initial;
+		}
+
+		form button {
+			padding: 0 1.3rem;
+			border: none;
+			background: #FF6666;
+			color: white;
+			text-transform: uppercase;
+			font-weight: bold;
+			border: 1px solid rgba(255, 255, 255, .3);
+			margin-left: 5px;
+			cursor: pointer;
+			transition: background .2s ease-out;
+		}
+
+		form button:hover {
+			background: #FF5E5E;
+		}
+
+		form input,
+		form button {
+			font-family: 'Quicksand', sans-serif;
+			height: 3rem;
+		}
+
+
+		/* TOOGLE COMPONENT */
+
+		.togglebutton-wrapper {
+			margin-top: 1em;
+		}
+
+		.togglebutton-wrapper label {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+		}
+
+		.togglebutton-wrapper input {
+			position: absolute;
+			left: -9999px;
+		}
+
+		.togglebutton-wrapper .togglebutton-label {
+			font-size: .8rem;
+			letter-spacing: .1em
+		}
+
+		.togglebutton-wrapper .tooglebutton-box {
+			position: relative;
+			display: block;
+			margin-left: 0.6em;
+			width: 38px;
+			height: 22px;
+			background: white;
+			/*border:1px solid black;*/
+			border-radius: 999px;
+			cursor: pointer;
+		}
+
+		.togglebutton-wrapper .tooglebutton-box:before {
+			content: '';
+			position: absolute;
+			top: 2px;
+			left: 2px;
+			display: block;
+			width: 18px;
+			height: 18px;
+			/*border:1px solid #FF6666;*/
+			border-radius: 50%;
+			background: #FF6666;
+			opacity: 0.7;
+			transition: all .2s ease-in-out;
+		}
+
+		.togglebutton-wrapper.togglebutton-focus .tooglebutton-box {
+			box-shadow: 0px 0px 0px 3px rgba(0, 0, 0, 0.1);
+		}
+
+		.togglebutton-wrapper.togglebutton-checked .tooglebutton-box:before {
+			left: calc(100% - 4px - 16px);
+			opacity: 1;
+		}
+
+		.el-loading-spinner .el-loading-text,
+		.el-loading-spinner .path {
+			stroke: #fff !important;
+			color: #fff !important;
+		}
+
+
+		.fade-enter-active,
+		.fade-leave-active {
+			transition: opacity .3s;
+		}
+
+		.fade-enter,
+		.fade-leave-active {
+			opacity: 0;
+		}
+
+
+		input,
+		button {
+			outline: none
+		}
+
+		.help {}
+
+		.help dl {
+			margin-top: 10px;
+		}
+
+		.help a,
+		.help span {
+			color: #a6fda7
+		}
+
+		@media screen and (min-width: 320px) and (max-width: 375px) {
+			html,
+			body {
+				background: #ff6665;
+			}
+			#todolist {
+				box-shadow: none;
+				margin: 0 auto;
+			}
+			html form input {
+				padding: 0;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<script src="js/vue.min.js"></script>
+	<script src="js/nebPay.js"></script>
+	<script src="js/nebulas.js"></script>
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="js/config.js"></script>
+
+	<main id="todolist">
+
+		<h1>
+			事项清单
+			<span>{{username}}把事情完成，一步一个脚印。</span>
+		</h1>
+
+		<template v-if="todo.length">
+			<ul>
+				<li v-for="item in todoByStatus" stagger="5000" v-bind:class="item.done ? 'done' : ''">
+					<span class="label">{{item.content}}</span>
+					<div class="actions">
+						<button class="btn-picto" type="button" v-on:click="markAsDoneOrUndone(item)" v-bind:aria-label="!item.switch ? 'Undone' : 'Done'"
+						    v-bind:title="!item.switch ? 'Undone' : 'Done'">
+							<i aria-hidden="true" class="material-icons">{{ !item.switch ? 'check_box' : 'check_box_outline_blank' }}</i>
+						</button>
+						<button class="btn-picto" type="button" v-on:click="deleteItemFromList(item)" aria-label="Delete" title="Delete">
+							<i aria-hidden="true" class="material-icons">删除</i>
+						</button>
+					</div>
+				</li>
+			</ul>
+			<togglebutton label="在最后移动完成的项目？" name="todosort" v-on:clicked="clickontoogle" />
+		</template>
+		<p v-else class="emptylist"> {{username}}你的待办事项列表是空的。 </p>
+		<form name="newform" v-on:submit.prevent="addItem">
+			<div v-if='!showName' style="margin-top: 3rem;display: flex;flex-wrap: wrap;">
+				<label for="showName">填写个性昵称</label>
+				<input type="text" name="showName" id="showName" v-model="username">
+				<button style="opacity: 0;pointer-events: none">添加</button>
+			</div>
+			<label for="newitem">添加到待办事项列表</label>
+			<input type="text" name="newitem" id="newitem" v-model="content">
+			<button type="submit">添加</button>
+		</form>
+		<p style="padding: 20px 0 0; text-align: center;font-size: 12px" @click='help=!help'>关于</p>
+		<transition name="fade">
+			<div v-if='help' style="font-size: 12px;margin-top: 20px;" class="help">
+				<h2>项目介绍</h2>
+				<p style="padding: 10px 0">最简洁的事项清单，及时查看及时删除，操作简单明了，数据基于星云链实时同步，同时支持pc端和移动端。</p>
+				<h2>操作流程</h2>
+				<dd>
+					<dl>
+						<dd>
+							<dl>桌面端：您需要使用桌面版 Chrome 浏览器，并安装
+								<a target="_blank" href="https://github.com/nebulasio/WebExtensionWallet">星云钱包扩展</a> 。请注意：钱包扩展需要保持在默认的 “主网”（mainnet）状态。</dl>
+							<dl>手机端：推荐使用手机自带浏览器（iOS Safari 或 Android Chrome），并安装
+								<a target="_blank" href="https://nano.nebulas.io/">星云官方手机钱包 APP：Nas nano</a>。</dl>
+						</dd>
+					</dl>
+					<dl>
+						您需要有一个自己的星云钱包，并导入到 Chrome 钱包扩展或手机钱包 APP 中。如果没有钱包，可以通过星云 Web Wallet 创建，
+						<a target="_blank" href="https://blog.nebulas.io/2018/04/12/creating-a-nas-wallet/">教程参见这里</a>（也可以通过钱包扩展来创建，操作步骤类似）。
+					</dl>
+					<dl>
+						您的星云钱包里需要有少许星云币余额，用于提交数据时支付手续费（数额极小，在交易时由链收取）。您可以在发邮件求助本应用的作者
+						<span>1047105447@qq.com</span>，作者将赠送给您少量星云币。
+					</dl>
+					<dl>
+						您也可以
+						<a target="_blank" href="https://incentive.nebulas.io/cn/signup.html?invite=bFZxb">开发</a>基于星云链的Dapp
+						<a target="_blank" href="https://nebulas.io/cn/incentive.html">参加星云激励计划</a>
+					</dl>
+				</dd>
+			</div>
+		</transition>
+	</main>
+
+	<script>
+		Vue.component('togglebutton', {
+			props: ['label', 'name'],
+			template: `<div class="togglebutton-wrapper" v-bind:class="isactive ? 'togglebutton-checked' : ''">
+      <label v-bind:for="name">
+        <span class="togglebutton-label">{{ label }}</span>
+        <span class="tooglebutton-box"></span>
+      </label>
+      <input v-bind:id="name" type="checkbox" v-bind:name="name" v-model="isactive" v-on:change="onToogle">
+  </div>`,
+			model: {
+				prop: 'checked',
+				event: 'change'
+			},
+			data: function () {
+				return {
+					isactive: false
+				}
+			},
+			methods: {
+				onToogle: function () {
+					this.$emit('clicked', this.isactive)
+				}
+			}
+		});
+
+		var todolist = new Vue({
+			el: '#todolist',
+			data: {
+				help: false,
+				from: '',
+				content: '',
+				sortByStatus: false,
+				showName: false,
+				username: '',
+				todo: []
+			},
+			created() {
+				dapp.init().then(r => this.from = r).then(() => {
+					dapp.forEach().then(r => this.todo = r || []).then(() => {
+						localStorage.username = this.username = (this.todo[0] && this.todo[0].username) || '';
+						this.showName = !!this.username
+					})
+				});
+			},
+			methods: {
+				addItem: function () {
+					let username = (localStorage.username && localStorage.username != 'undefined' && localStorage.username !=
+							'null') ?
+						localStorage.username : this.username;
+					if (username.length > 20) {
+						alert('昵称不能大于20个字符')
+						return
+					}
+					let obj = {
+						id: this.from + Date.now(),
+						from: this.from,
+						content: this.content,
+						username,
+						switch: true,
+					}
+					dapp.set(obj).then(r => {
+						this.todo.push(obj);
+						this.content = '';
+					})
+				},
+				markAsDoneOrUndone: function (item) {
+					item.switch = !item.switch;
+				},
+				deleteItemFromList: function (item) {
+					dapp.set({
+						id: item.id,
+						from: this.from,
+						content: this.content,
+						switch: false,
+					}).then(r => {
+						let index = this.todo.indexOf(item)
+						this.todo.splice(index, 1);
+					})
+
+				},
+				clickontoogle: function (active) {
+					this.sortByStatus = active;
+				}
+			},
+			computed: {
+				todoByStatus: function () {
+
+					if (!this.sortByStatus) {
+						return this.todo;
+					}
+
+					var sortedArray = []
+					var doneArray = this.todo.filter(function (item) {
+						return item.switch;
+					});
+					var notDoneArray = this.todo.filter(function (item) {
+						return !item.switch;
+					});
+
+					sortedArray = [...notDoneArray, ...doneArray];
+					return sortedArray;
+				}
+			}
+		});
+	</script>
+
+</body>
+
+</html>
